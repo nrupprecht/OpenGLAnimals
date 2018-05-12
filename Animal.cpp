@@ -97,7 +97,7 @@ namespace AnimalSimulation {
   }
 
   bool Animal::update(float dt, Simulation* simulation) {
-    if (parameters==nullptr || parameters[0]<0) return true; // Is dead
+    if (parameters[0]<0) return true; // Is dead
 
     // Set the noise input
     parameters[3] = randNormal(); // Multiply by sqrt(dt) ?
@@ -157,7 +157,7 @@ namespace AnimalSimulation {
 
     // Possibly have children - if enough time has gone by and the animal has enough energy
     if (timeSinceLastBirth>birthDelay && parameters[0]>0.2*maxEnergy) {
-      Animal *a = createOffspring(this);
+      Animal *a = createOffspring();
       simulation->addAnimal(a);
       parameters[0] -= 0.2*maxEnergy;
       timeSinceLastBirth = 0;
@@ -193,11 +193,8 @@ namespace AnimalSimulation {
   }
 
     // Create an offspring
-  Animal* Animal::createOffspring(Animal *parent) {
-    Animal *child = new Animal(*parent);
-    cout << "fin\n";
-
-    /*
+  Animal* Animal::createOffspring() {
+    Animal *child = new Animal(*this);
     // Change angle
     child->theta = 2*PI*drand48();
     // Mutate attributes
@@ -218,7 +215,8 @@ namespace AnimalSimulation {
       perturbation.randomNormal();
       NTplusEqUnsafe(b, perturbation);
     }
-    */
+    // Return the animal
+    return child;
   }
 
 }

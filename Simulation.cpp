@@ -81,8 +81,9 @@ namespace AnimalSimulation {
   void Simulation::update(float dt) {
     // Get rid of dead plants and animals
     for (auto a : deadAnimals) {
-      delete *a;
+      Animal *A = *a;
       animals.erase(a);
+      delete A;
     }
     deadAnimals.clear();
     for (auto p : deadPlants) {
@@ -91,7 +92,9 @@ namespace AnimalSimulation {
     }
     deadPlants.clear();
     // Add new plants and animals
-    for (auto a : newAnimals) animals.push_back(a);
+    for (auto a : newAnimals) {
+      animals.push_back(a);
+    }
     newAnimals.clear();
     for (auto p : newPlants) plants.push_back(p);
     newPlants.clear();
@@ -141,11 +144,11 @@ namespace AnimalSimulation {
       // Update the animals
       for (auto a = animals.begin(); a!=animals.end(); ++a)
         if ( (*a)->update(dt, this) )
-          deadAnimals.push_back(a);
+          a = animals.erase(a);
       // Update the plants
       for (auto p = plants.begin(); p!=plants.end(); ++p)
         if ( (*p)->update(dt, this) )
-          deadPlants.push_back(p);
+	  p = plants.erase(p);
       // Update the simulation
       update(dt);
     #if USE_OPENGL==1
@@ -213,9 +216,6 @@ namespace AnimalSimulation {
   }
 
   void Simulation::_handleInput(unsigned char key, int x, int y) {
-
-    cout << (int)key << endl;
-
     switch (key) {
       case '=':
         displayRate *= 2.0;

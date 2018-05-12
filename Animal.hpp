@@ -49,8 +49,8 @@ namespace AnimalSimulation {
     // Create a random animal
     static Animal* randomAnimal();
 
-    // Create an offspring
-    static Animal* createOffspring(Animal*);
+    // Create an offspring of this animal
+    Animal* createOffspring();
 
     // Exception classes
     class BadAnimalBrain {};
